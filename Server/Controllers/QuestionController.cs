@@ -28,7 +28,8 @@ namespace QuizApplication.Server.Controllers
         {
             try
             {
-                Question? question = _context.Questions.Find(id);
+                Question? question = _context.Questions.Where(q => q.Id == id).Include(q => q.Answers).FirstOrDefault();
+
                 if (question != null)
                 {
                     return Ok(question);

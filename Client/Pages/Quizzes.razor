@@ -39,18 +39,18 @@ else
                     <td>@quiz.Title</td>
                     <td>@quiz.TimeLimit min</td>
                     <td>
+                        <a href='/quiz/edit/@quiz.Id' class="btn btn-outline-dark" role="button">Edit</a>
+                        <a class="btn btn-outline-danger" role="button" @onclick="@(() => { DeleteQuiz(quiz.Id); })">Delete</a>
                         @if (quiz.IsPublished)
                         {
                             <a class="btn btn-susscess disabled" role="button">Published</a>
-
+                            <a href='/quiz/stats/@quiz.Id' class="btn btn-outline-dark" role="button">Stats</a>
                         }
                         else
                         {
                             <a class="btn btn-outline-secondary" role="button" @onclick="@(() => { PublishQuiz(quiz); })">Publish</a>
 
                         }
-                        <a href='/quiz/edit/@quiz.Id' class="btn btn-outline-dark" role="button">Edit</a>
-                        <a class="btn btn-outline-danger" role="button" @onclick="@(() => { DeleteQuiz(quiz.Id); })">Delete</a>
                     </td>
                 </tr>
             }

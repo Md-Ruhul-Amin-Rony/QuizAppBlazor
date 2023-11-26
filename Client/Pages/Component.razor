@@ -1,0 +1,68 @@
+﻿@page "/quiz/stats/{id:int}"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using QuizAppBlazor.Shared
+@using System.Text;
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>Statistics</h1>
+<h3>Quiz title: @quiz.Title</h3>
+
+<hr />
+@((MarkupString)stats)
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    protected List<Answer> AnswerList = new List<Answer>();
+    protected Quiz quiz = new();
+    protected Question question = new();
+    bool IsLoaded = false;
+    string stats;
+
+
+
+    int TotalParticipant = 0;
+
+    public class Stats
+    {
+        public int QuestionId { get; set; }
+        public int NumberOfUser { get; set; }
+        public int TotalCorrectAnswer { get; set; }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (id != 0)
+        {
+            quiz = await Http.GetFromJsonAsync<Quiz>("api/Quiz/" + id);
+            IsLoaded = true;
+
+            foreach (var item in quiz.Questions)
+            {
+                question = await Http.GetFromJsonAsync<Question>("api/Question/" + item.Id);
+
+                foreach (var answer in question.Answers)
+                {
+                    AnswerList.Add(answer);
+
+                }
+            }
+
+            var groups = AnswerList.GroupBy(u => u.UserId).Select(group => new { UserId = group.Key, Items = group.ToList() });
+
+            foreach (var item in groups)
+            {
+                stats = stats + $"<h4>User: {item.UserId} </h4> <h5>Correct answers:  {item.Items.Where(i => i.IsCorrectAnswer).Count()}  </h5> <hr />";
+
+            }
+
+        }
+
+    }
+}
+

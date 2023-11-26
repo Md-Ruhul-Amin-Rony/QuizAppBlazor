@@ -46,19 +46,7 @@ namespace QuizApplication.Server.Controllers
 
 
         }
-
-        [HttpPut]
-        public void Put(Answer answer)
-        {
-            var question = _context.Questions.Where(q => q.Id == answer.QuestionId).FirstOrDefault();
-
-            if (question.CorrectAnswer == answer.Text)
-            {
-                answer.IsCorrectAnswer = true;
-            }
-            _context.Entry(answer).State = EntityState.Modified;
-            _context.SaveChanges();
-        }
+        
         private string? GetUserId()
         {
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
