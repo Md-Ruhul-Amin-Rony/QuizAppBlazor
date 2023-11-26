@@ -1,0 +1,135 @@
+﻿@page "/quiz/add"
+@page "/quiz/edit/{id:int}"
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using QuizAppBlazor.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>@Title quiz</h1>
+<hr />
+
+<EditForm Model="@quiz" OnValidSubmit="SaveQuiz">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="quiz.Title" />
+        </div>
+        <ValidationMessage For="@(() => quiz.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="TimeLimit" class="form-label">Time limit</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" @bind-Value="quiz.TimeLimit" />
+        </div>
+        <ValidationMessage For="@(() => quiz.TimeLimit)" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+<hr />
+
+@if (id != 0)
+{
+    <h1>Questions</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <a href='/quiz/addquestion/@id' class="btn btn-primary" role="button">
+                <i class="fas fa-user-plus"></i>
+                Add question
+            </a>
+        </div>
+    </div>
+}
+
+<br />
+@if (quiz.Questions == null)
+{
+    <p><em>Quesstions not found!</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Id</th>
+                <th>Text</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var question in quiz.Questions)
+            {
+                <tr>
+                    <td>@question.Id</td>
+                    <td>@question.Text</td>
+                    <td>@question.AnswerType.ToString()</td>
+                    <td>
+                        <a href='/quiz/updatequestion/@id/@question.Id' class="btn btn-outline-dark" role="button">Edit</a>
+                        <a class="btn btn-outline-danger" role="button" @onclick="@(() => { DeleteQuestion(question.Id); })">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    protected string Title = "Add";
+    protected Quiz quiz = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (id != 0)
+        {
+            Title = "Edit";
+            quiz = await Http.GetFromJsonAsync<Quiz>("api/Quiz/" + id);
+        }
+    }
+
+    protected async Task SaveQuiz()
+    {
+
+        if (quiz.Id != 0)
+        {
+            await Http.PutAsJsonAsync("api/Quiz", quiz);
+        }
+        else
+        {
+            await Http.PostAsJsonAsync("api/Quiz", quiz);
+        }
+        Cancel();
+    }
+
+    public void Cancel()
+    {
+
+        NavigationManager.NavigateTo("/allquizzes");
+    }
+
+    protected async Task DeleteQuestion(int id)
+    {
+        await Http.DeleteAsync($"api/Question/{id}");
+        quiz.Questions.RemoveAll(x => x.Id == id);
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+
+    }
+}
+
+

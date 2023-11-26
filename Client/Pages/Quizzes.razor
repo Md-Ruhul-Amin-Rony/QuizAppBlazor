@@ -1,0 +1,96 @@
+﻿@page "/allquizzes"
+@using QuizAppBlazor.Shared
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject HttpClient Http
+@* @inject NavigationManager NavigationManager
+ *@
+<h1>Quizzes</h1>
+<div class="row">
+    <div class="col-md-6">
+        <a href='/quiz/add' class="btn btn-primary" role="button">
+            <i class="fas fa-user-plus"></i>
+            Add quiz
+        </a>
+    </div>
+</div>
+<br />
+@if (QuizList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>TimeLimit</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var quiz in QuizList)
+            {
+                <tr>
+                    <td>@quiz.Id</td>
+                    <td>@quiz.Title</td>
+                    <td>@quiz.TimeLimit min</td>
+                    <td>
+                        @if (quiz.IsPublished)
+                        {
+                            <a class="btn btn-susscess disabled" role="button">Published</a>
+
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-secondary" role="button" @onclick="@(() => { PublishQuiz(quiz); })">Publish</a>
+
+                        }
+                        <a href='/quiz/edit/@quiz.Id' class="btn btn-outline-dark" role="button">Edit</a>
+                        <a class="btn btn-outline-danger" role="button" @onclick="@(() => { DeleteQuiz(quiz.Id); })">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@code {
+    protected List<Quiz> QuizList { get; set; }
+    //protected User user = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetQuiz();
+    }
+    protected async Task GetQuiz()
+    {
+        QuizList = await Http.GetFromJsonAsync<List<Quiz>>("api/Quiz");
+    }
+
+    protected async Task DeleteQuiz(int id)
+    {
+        Console.WriteLine(QuizList.Count);
+        await Http.DeleteAsync($"api/Quiz/{id}");
+        QuizList.RemoveAll(x => x.Id == id);
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    protected async Task PublishQuiz(Quiz quiz)
+    {
+        quiz.IsPublished = true;
+
+        await Http.PutAsJsonAsync("api/Quiz", quiz);
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}
