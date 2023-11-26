@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "X2WQOsKiBwGdxOwuJHJ8q1Ftf8XM137Ij+h1W0ygKfI2f90RHdr3XlV80elgUs38adSDB1jQZ8QOIH28ZfSpqg==",
+  "dgSpecHash": "zCmJ92pqa+NXR51V16zmWWM+bO85lFghs5ncYsruBVzXNuUoRSAlSlIjCThdW4l887WwOCDkkyTXctAsLZEJHA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\iqbal\\source\\repos\\QuizAppBlazor\\Shared\\QuizAppBlazor.Shared.csproj",
+  "projectFilePath": "D:\\.NETChas\\AdvancedFullstack\\Quiz Project With Blazor\\FinalProject\\QuizAppBlazor\\Shared\\QuizAppBlazor.Shared.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

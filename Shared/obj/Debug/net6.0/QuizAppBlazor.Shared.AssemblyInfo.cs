@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuizAppBlazor.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f94eb70f81b1cb4f990c25e5a711894e05b9a8c")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuizAppBlazor.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuizAppBlazor.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
