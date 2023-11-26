@@ -3,6 +3,14 @@ Quiz – ASP.Net core-6 WebAssembly – Blazor (MultiUser, MultiQuiz, Time Durat
 
 Welcome to our team’s project. We have built this application using ASP.NET Webassembly-Blazor. Application has multiple user creating option. Every user can create Quiz(No limited). Every quiz has option to create questioner where user can put multiple options or Video or Image(PNG) or free text. User can put time duration for each quiz page. After the time period, if all question doesn’t have answer quiz will stop. 
 
+## Features
+#### Login and Registration
+#### Quiz
+#### Questioner
+#### Time Duration for each Quiz.
+#### Score/Statistics
+#### Link can be shared
+
 ## Structure of Project:
 |   Tasks     |   Framwork    |  Effect  |
 |-----|--------|-------|
