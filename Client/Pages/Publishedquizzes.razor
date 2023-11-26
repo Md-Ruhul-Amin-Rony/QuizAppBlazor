@@ -1,0 +1,52 @@
+﻿@page "/publishedquizzes"
+@using QuizAppBlazor.Shared
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject HttpClient Http
+
+<h1>Published Quizzes</h1>
+<p>Please start answering quizzes bellow </p>
+
+@if (QuizList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>TimeLimit</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var quiz in QuizList)
+            {
+                <tr>
+                    <td>@quiz.Id</td>
+                    <td>@quiz.Title</td>
+                    <td>@quiz.TimeLimit min</td>
+                    <td>
+                        <a href='/quiz/start/@quiz.Id' class="btn btn-outline-dark" role="button">Take the quiz</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@code {
+    protected List<Quiz> QuizList { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetQuiz();
+    }
+    protected async Task GetQuiz()
+    {
+        QuizList = await Http.GetFromJsonAsync<List<Quiz>>("api/Quiz/Published");
+    }
+}
