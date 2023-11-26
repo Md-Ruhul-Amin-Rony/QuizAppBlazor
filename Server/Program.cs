@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using QuizAppBlazor.Server.Data;
 using QuizAppBlazor.Server.Models;
+using System.Text.Json.Serialization;
 
 namespace QuizAppBlazor
 {
@@ -29,6 +30,9 @@ namespace QuizAppBlazor
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             var app = builder.Build();
 
